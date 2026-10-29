@@ -1,0 +1,12 @@
+FROM apache/airflow:3.1.7-python3.11
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-17-jre-headless \
+ && rm -rf /var/lib/apt/lists/* \
+ && mkdir -p /data /home/airflow/.ivy2 && chmod 0777 /data && chown -R airflow:0 /home/airflow/.ivy2
+USER airflow
+RUN pip install --no-cache-dir pyspark==3.5.8 delta-spark==3.3.2 kafka-python==2.2.15
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 \
+    PYSPARK_PYTHON=python3 \
+    PYSPARK_DRIVER_PYTHON=python3 \
+    SPARK_LOCAL_HOSTNAME=localhost
+WORKDIR /app

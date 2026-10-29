@@ -1,0 +1,17 @@
+FROM python:3.11-slim-bookworm
+ENV DEBIAN_FRONTEND=noninteractive \
+    JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 \
+    PYSPARK_PYTHON=python3 \
+    PYSPARK_DRIVER_PYTHON=python3 \
+    PYTHONUNBUFFERED=1 \
+    SPARK_LOCAL_HOSTNAME=localhost
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-17-jre-headless bash tini \
+ && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir pyspark==3.5.8 delta-spark==3.3.2 kafka-python==2.2.15
+RUN useradd --uid 50000 --create-home --shell /bin/bash spark \
+ && mkdir -p /data /app /home/spark/.ivy2 \
+ && chmod 0777 /data && chown -R spark:spark /home/spark
+ENV HOME=/home/spark
+WORKDIR /app
+USER spark
+ENTRYPOINT ["tini", "--"]
