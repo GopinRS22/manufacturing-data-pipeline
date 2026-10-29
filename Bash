@@ -1,0 +1,2 @@
+origin	https://github.com/GopinRS22/manufacturing-data-pipeline.git (fetch)
+origin	https://github.com/GopinRS22/manufacturing-data-pipeline.git (push)
